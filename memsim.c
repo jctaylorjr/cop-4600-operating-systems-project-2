@@ -33,6 +33,20 @@ int main(int argc, char const *argv[])
 	// debug check here because vms can change it
 	debug_mode_check_err(debug_mode);
 
+	if (!strcmp(policy, "fifo")) {
+		fifo(argc, argv);
+	} else if (!strcmp(policy, "lru")) {
+		printf("lru runs\n");
+	} else if (!strcmp(policy, "vms")) {
+		printf("vms runs\n");
+	} else {
+		fprintf(stderr, ANSI_COLOR_RED
+			"No policy was selected to run." ANSI_COLOR_RESET);
+		exit(EXIT_FAILURE);
+	}
+
+	exit(EXIT_SUCCESS);
+
 	// opening and checking trace file
 	FILE *fp;
 	fp = fopen(trace_file, "r");

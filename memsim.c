@@ -3,6 +3,7 @@
 #include <string.h>
 #include <limits.h>
 
+#include "policies.h"
 #include "error_check.h"
 
 int main(int argc, char const *argv[])

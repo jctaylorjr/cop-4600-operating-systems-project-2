@@ -4,7 +4,7 @@
 
 int main(int argc, char const *argv[])
 {
-	// 2^10 = 1KB = 1024B, 2^3 = 1B, 4KB = 4096B
+	// 2^10 = 1KB = 1024B, 2^2 = 4B, 4KB = 4096B = 2^12
 	unsigned int virtual_address = 21; //010101b
 	unsigned int vpn_mask = 0x30; //110000b
 	unsigned int vpn = (virtual_address & vpn_mask) >> 4; //010000 >> 000001

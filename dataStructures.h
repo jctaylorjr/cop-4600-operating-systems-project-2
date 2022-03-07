@@ -3,6 +3,9 @@
 
 #include <limits.h>
 
+#define PAGETABLE_SIZE (UINT_MAX >> 12)
+#define TBL_SIZE (UINT_MAX >> 20)
+
 struct PageTableEntry {
 	unsigned int vaddr; // virtual address, given
 	unsigned int paddr; // physical address, determined in policy

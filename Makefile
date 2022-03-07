@@ -1,3 +1,4 @@
+# https://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 CC=gcc
 CFLAGS=-I.
 DEPS = policies.h error_check.h dataStructures.h

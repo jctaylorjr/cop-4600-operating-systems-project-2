@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "error_check.h": "c"
+        "error_check.h": "c",
+        "limits.h": "c",
+        "datastructures.h": "c"
     }
 }

@@ -3,21 +3,22 @@
 #include <string.h>
 #include <limits.h>
 
-#include "policies.h"
 #include "error_check.h"
+#include "dataStructures.h"
+#include "policies.h"
 
 int main(int argc, char const *argv[])
 {
 	// declaring variables to give names to all argv inputs for easier recognition
 	const char *trace_file, *policy, *debug_mode;
-	int num_page_frames, memory_percent;
+	int nframes, memory_percent;
 
 	// checking if argc is correct, takes vms into account as well
 	argc_check_err(argc, argv);
 
 	// setting the argv variables
 	trace_file = argv[1];
-	num_page_frames = atoi(argv[2]);
+	nframes = atoi(argv[2]);
 	policy = argv[3];
 	debug_mode = argv[4];
 
@@ -34,7 +35,7 @@ int main(int argc, char const *argv[])
 	debug_mode_check_err(debug_mode);
 
 	if (!strcmp(policy, "fifo")) {
-		fifo(argc, argv);
+		fifo(trace_file, nframes, debug_mode);
 	} else if (!strcmp(policy, "lru")) {
 		printf("lru runs\n");
 	} else if (!strcmp(policy, "vms")) {
@@ -56,6 +57,8 @@ int main(int argc, char const *argv[])
 	// read from the .trace files
 	unsigned int addr;
 	char rw;
+	int arr[PAGETABLE_SIZE] = { 0 };
+	int total = 0;
 
 	while (fscanf(fp, "%x %c", &addr, &rw) != EOF) {
 		// probably only have printing on for debugging
@@ -71,11 +74,28 @@ int main(int argc, char const *argv[])
 		// checking to see if highest or lowest bit is empty
 		// (they aren't)
 		printf("\tvaddr_b10: %u\tvaddr_b16: %x\n", addr, addr);
-		if (addr & ((UINT_MAX >> 1) ^ UINT_MAX) || addr & 1) {
-			fprintf(stderr, "Found the bit\n");
-			exit(EXIT_FAILURE);
+		// if (addr & ((UINT_MAX >> 1) ^ UINT_MAX) || addr & 1) {
+		// 	fprintf(stderr, "Found the bit\n");
+		// 	exit(EXIT_FAILURE);
+		// }
+		struct PageTableEntry temp;
+		temp.addr = addr;
+		temp.rw = rw;
+		generateVpn(&temp);
+		generateOffset(&temp);
+		printf("vpn: %x\n", temp.vpn);
+		if (arr[temp.vpn] == 0) {
+			total++;
+		}
+		arr[temp.vpn]++;
+	}
+
+	for (int i = 0; i < PAGETABLE_SIZE; i++) {
+		if (arr[i] > 0) {
+			printf("Index: %d, count: %d\n", i, arr[i]);
 		}
 	}
+	printf("total: %d\n", total);
 
 	return 0;
 }

@@ -1,4 +1,11 @@
 #include "dataStructures.h"
 
-struct PageTableEntry PageTable[PAGETABLE_SIZE]; // 2^20 total entries
-struct PageTableEntry TLB[TBL_SIZE]; // 2^12 total entries
+unsigned int generateVpn(struct PageTableEntry *pte)
+{
+	return pte->vpn = (pte->addr & VPN_MASK) >> SHIFT_OFFSET;
+}
+
+unsigned int generateOffset(struct PageTableEntry *pte)
+{
+	return pte->offset = (pte->addr & OFFSET_MASK);
+}

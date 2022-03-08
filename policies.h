@@ -1,6 +1,6 @@
 #ifndef POLICIES_H
 #define POLICIES_H
 
-void fifo(int argc, const char *argv[]);
+void fifo(const char *trace_file, int nframes, const char *debug_mode);
 
 #endif

@@ -7,6 +7,35 @@
 #include "error_check.h"
 #include "dataStructures.h"
 
+void addressPrint(struct PageTableEntry *pte, const char *debug_mode)
+{
+	if (!strcmp(debug_mode, "debug")) {
+		// probably only have printing on for debugging
+		printf("read/write: %c\ttrace: ", pte->rw);
+		// shifting 1 to left 31 times, masking number in question, then reducing 1 bit
+		for (unsigned int i = 1 << 31; i > 0; i = i >> 1) {
+			pte->addr &i ?
+				printf(ANSI_COLOR_GREEN "1" ANSI_COLOR_RESET) :
+				      printf("0");
+		}
+
+		printf("\tvpn: ");
+		for (unsigned int i = 1 << 31; i > 0; i = i >> 1) {
+			pte->vpn &i ?
+				printf(ANSI_COLOR_GREEN "1" ANSI_COLOR_RESET) :
+				      printf("0");
+		}
+
+		printf("\tpaddr: ");
+		for (unsigned int i = 1 << 31; i > 0; i = i >> 1) {
+			pte->offset &i ?
+				printf(ANSI_COLOR_GREEN "1" ANSI_COLOR_RESET) :
+				      printf("0");
+		}
+		printf("\n");
+	}
+}
+
 void fifo(const char *trace_file, int nframes, const char *debug_mode)
 {
 	struct PageTableEntry page_table[nframes];
@@ -43,41 +72,9 @@ void fifo(const char *trace_file, int nframes, const char *debug_mode)
 				if (temp.vpn == page_table[index].vpn) {
 				}
 			}
-
-			if (!strcmp(debug_mode, "debug")) {
-				// probably only have printing on for debugging
-				printf("read/write: %c\ttrace: ", rw);
-				// shifting 1 to left 31 times, masking number in question, then reducing 1 bit
-				for (unsigned int i = 1 << 31; i > 0;
-				     i = i >> 1) {
-					temp.addr &i ?
-						printf(ANSI_COLOR_GREEN
-						       "1" ANSI_COLOR_RESET) :
-						      printf("0");
-				}
-
-				printf("\tvpn: ");
-				for (unsigned int i = 1 << 31; i > 0;
-				     i = i >> 1) {
-					temp.vpn &i ?
-						printf(ANSI_COLOR_GREEN
-						       "1" ANSI_COLOR_RESET) :
-						      printf("0");
-				}
-
-				printf("\tpaddr: ");
-				for (unsigned int i = 1 << 31; i > 0;
-				     i = i >> 1) {
-					temp.offset &i ?
-						printf(ANSI_COLOR_GREEN
-						       "1" ANSI_COLOR_RESET) :
-						      printf("0");
-				}
-				printf("\n");
-			}
 			pgtb_count++;
+			addressPrint(&temp, debug_mode);
 		}
-
 		trace_count++;
 	}
 	printf("pgtb_count: %d\t", pgtb_count);

@@ -52,6 +52,7 @@ Mkfile.old
 dkms.conf
 
 # Files that im using for testing
+memsim
 bit-masking-notes.c
 short-1.trace
 short-2.trace
